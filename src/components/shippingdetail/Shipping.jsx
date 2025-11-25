@@ -285,8 +285,9 @@ const Shipping = () => {
         {/* Shipping Methods List */}
         {loading && shippingMethods.length === 0 ? (
           <div className="text-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-3 border-gray-900 border-t-transparent mx-auto"></div>
-            <p className="text-gray-600 mt-3 text-sm">Loading...</p>
+            <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
           </div>
         ) : shippingMethods.length === 0 ? (
           <div className="bg-gray-50 rounded-lg border border-gray-200 p-12 text-center">

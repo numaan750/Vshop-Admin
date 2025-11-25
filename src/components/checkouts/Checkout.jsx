@@ -332,8 +332,9 @@ const Checkout = () => {
         {/* Loading State */}
         {loading ? (
           <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto"></div>
-            <p className="text-gray-600 mt-4">Loading orders...</p>
+            <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
           </div>
         ) : orders.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">

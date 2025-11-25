@@ -81,7 +81,7 @@ export default function ModernDashboardLayout() {
               <button
                 key={item.name}
                 onClick={() => setActiveView(item.name)}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all w-full text-left ${
+                className={`cursor-pointer flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all w-full text-left ${
                   activeView === item.name
                     ? "bg-indigo-50 text-indigo-600 font-semibold"
                     : "text-gray-600 hover:bg-indigo-50 hover:text-indigo-600"

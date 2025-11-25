@@ -232,10 +232,10 @@ const Category = () => {
         {categories.length === 0 ? (
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center">
-              <div className="text-gray-300 text-8xl mb-6">📁</div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                No categories yet
-              </h2>
+              {/* <div className="text-gray-300 text-8xl mb-6">📁</div> */}
+              <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
               <p className="text-gray-600 mb-8">
                 Start by creating your first category
               </p>
