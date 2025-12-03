@@ -20,6 +20,7 @@ const AllProducts = () => {
     images: [{ url: "", colour: "" }],
     colors: [{ name: "", hex: "" }],
     sizes: [{ label: "", price: "" }],
+    discount: { code: "", percent: "", expiresAt: "" },
   });
 
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -115,6 +116,40 @@ const AllProducts = () => {
     const { name, value, type, checked } = e.target;
     setProduct({ ...product, [name]: type === "checkbox" ? checked : value });
   };
+
+  const handleDiscountChange = (field, value) => {
+  setProduct({
+    ...product,
+    discount: { ...product.discount, [field]: value },
+  });
+};
+
+// ✅ YEH PURA FUNCTION ADD KARO
+const getDiscountedPrice = (prod) => {
+  if (!prod.discount?.percent || !prod.discount?.expiresAt) {
+    return null;
+  }
+  
+  const now = new Date();
+  const expiryDate = new Date(prod.discount.expiresAt);
+  
+  if (expiryDate < now) {
+    return null; // Discount expired
+  }
+  
+  const discount = prod.price * (prod.discount.percent / 100);
+  return prod.price - discount;
+};
+
+
+const hasActiveDiscount = (prod) => {
+  if (!prod.discount?.percent || !prod.discount?.expiresAt) return false;
+
+  const now = new Date();
+  const expiry = new Date(prod.discount.expiresAt);
+
+  return expiry > now; // agar expiry aaj se bad me ho to discount active hai
+};
 
   const handleImageChange = (index, field, value) => {
     const newImages = [...product.images];
@@ -313,6 +348,17 @@ const AllProducts = () => {
       return imageData;
     });
 
+   let discountData = null;
+if (product.discount.code?.trim() && product.discount.percent && product.discount.expiresAt) {
+  discountData = {
+    code: product.discount.code.trim(),
+    percent: Number(product.discount.percent),
+    expiresAt: new Date(product.discount.expiresAt).toISOString(), // ✅ ISO STRING
+  };
+}
+console.log("📦 Discount Data being sent:", discountData);
+
+
     const payload = {
       title: product.title.trim(),
       price: Number(product.price),
@@ -324,6 +370,7 @@ const AllProducts = () => {
       sizes: product.sizes
         .filter((s) => s.label && s.price !== "")
         .map((s) => ({ label: s.label, price: Number(s.price) })),
+        discount: discountData,// ✅ YEH LINE ADD KARO
     };
 
     try {
@@ -351,37 +398,50 @@ const AllProducts = () => {
     }
   };
 
-  const handleEdit = (prod) => {
-    setProduct({
-      title: prod.title,
-      price: prod.price,
-      sale: prod.sale,
-      description: prod.description,
-      category: prod.category?._id || "",
-      colors:
-        prod.colors && prod.colors.length > 0
-          ? prod.colors.map((c) => ({ ...c, _id: c._id }))
-          : [{ name: "", hex: "" }],
-      images:
-        prod.images && prod.images.length > 0
-          ? prod.images.map((img) => ({
-              url: img.url || "",
-              colour: img.colour?._id || img.colour || "",
-            }))
-          : [{ url: "", colour: "" }],
-      sizes: prod.sizes || [{ label: "", price: "" }],
-    });
-    setEditingProduct(prod);
-    setShowModal(true);
+const handleEdit = (prod) => {
+  let discountValue = { code: "", percent: "", expiresAt: "" };
+  
+  if (prod.discount?.code && prod.discount?.percent && prod.discount?.expiresAt) {
+    const expiryDate = new Date(prod.discount.expiresAt);
+    discountValue = {
+      code: prod.discount.code,
+      percent: prod.discount.percent,
+      expiresAt: expiryDate.toISOString().slice(0, 16),
+    };
+  }
 
-    const previews = {};
-    if (prod.images && prod.images.length > 0) {
-      prod.images.forEach((img, idx) => {
-        previews[idx] = img.url;
-      });
-    }
-    setImagePreviews(previews);
-  };
+  setProduct({
+    title: prod.title,
+    price: prod.price,
+    sale: prod.sale,
+    description: prod.description,
+    category: prod.category?._id || "",
+    colors:
+      prod.colors && prod.colors.length > 0
+        ? prod.colors.map((c) => ({ ...c, _id: c._id }))
+        : [{ name: "", hex: "" }],
+    images:
+      prod.images && prod.images.length > 0
+        ? prod.images.map((img) => ({
+            url: img.url || "",
+            colour: img.colour?._id || img.colour || "",
+          }))
+        : [{ url: "", colour: "" }],
+    sizes: prod.sizes || [{ label: "", price: "" }],
+    discount: discountValue, // ✅ YEH line change karo
+  });
+  
+  setEditingProduct(prod);
+  setShowModal(true);
+
+  const previews = {};
+  if (prod.images && prod.images.length > 0) {
+    prod.images.forEach((img, idx) => {
+      previews[idx] = img.url;
+    });
+  }
+  setImagePreviews(previews);
+};
 
   const handleDelete = async (id) => {
     toast((t) => (
@@ -399,13 +459,13 @@ const AllProducts = () => {
                 toast.error("❌ " + result.message);
               }
             }}
-            className="bg-red-600 text-white px-3 py-1 rounded text-sm"
+            className="bg-red-600 cursor-pointer text-white px-3 py-1 rounded text-sm"
           >
             Yes
           </button>
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="bg-gray-200 text-gray-800 px-3 py-1 rounded text-sm"
+            className="bg-gray-200 cursor-pointer text-gray-800 px-3 py-1 rounded text-sm"
           >
             No
           </button>
@@ -432,6 +492,9 @@ const AllProducts = () => {
       images: [{ url: "", colour: "" }],
       colors: [{ name: "", hex: "" }],
       sizes: [{ label: "", price: "" }],
+      discount: { code: "", percent: "", expiresAt: "" }, // ✅ YEH LINE ADD KARO
+
+
     });
     setEditingProduct(null);
     setUploadingImage({});
@@ -559,54 +622,84 @@ const AllProducts = () => {
                 >
                   {/* Product Image */}
                   {displayImage?.url && (
-                    <div className="relative h-80 bg-slate-100 group">
-                      <img
-                        src={displayImage.url}
-                        alt={prod.title}
-                        className="w-full h-full object-contain p-4"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.parentElement.innerHTML =
-                            '<div class="flex items-center justify-center h-full text-slate-400 text-6xl">📦</div>';
-                        }}
-                      />
+  <div className="relative h-80 bg-slate-100 group">
+    <img
+      src={displayImage.url}
+      alt={prod.title}
+      className="w-full h-full object-contain p-4"
+      onError={(e) => {
+        e.target.style.display = "none";
+        e.target.parentElement.innerHTML =
+          '<div class="flex items-center justify-center h-full text-slate-400 text-6xl">📦</div>';
+      }}
+    />
 
-                      {/* Sale Badge */}
-                      {prod.sale && (
-                        <span className="absolute top-3 right-3 bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md font-medium shadow-lg">
-                          SALE
-                        </span>
-                      )}
-                    </div>
-                  )}
+    {/* ✅ DISCOUNT BADGE - YEH ADD KARO (Sale badge se PEHLE) */}
+    {hasActiveDiscount(prod) && (
+      <span className="absolute top-3 left-3 bg-red-600 text-white text-xs px-3 py-1.5 rounded-md font-bold shadow-lg">
+        {prod.discount.percent}% OFF
+      </span>
+    )}
 
+    {/* Sale Badge */}
+    {prod.sale && (
+      <span className="absolute top-3 right-3 bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md font-medium shadow-lg">
+        SALE
+      </span>
+    )}
+  </div>
+)}
                   <div className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-xl text-slate-900 flex-1">
-                        {prod.title}
-                      </h3>
-                      {!displayImage?.url && prod.sale && (
-                        <span className="bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md font-medium">
-                          SALE
-                        </span>
-                      )}
-                    </div>
+  <div className="flex items-start justify-between mb-3">
+    <h3 className="font-semibold text-xl text-slate-900 flex-1">
+      {prod.title}
+    </h3>
+    {!displayImage?.url && prod.sale && (
+      <span className="bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md font-medium">
+        SALE
+      </span>
+    )}
+  </div>
 
-                    <div className="mb-2">
-                      <span
-                        className={`text-xs px-2.5 py-1 rounded-md font-medium ${categoryDisplay.colorClass}`}
-                      >
-                        {categoryDisplay.name}
-                      </span>
-                    </div>
+  <div className="mb-2">
+    <span className={`text-xs px-2.5 py-1 rounded-md font-medium ${categoryDisplay.colorClass}`}>
+      {categoryDisplay.name}
+    </span>
+  </div>
 
-                    <p className="text-3xl font-bold text-slate-900 mb-3">
-                      Rs. {prod.price}
-                    </p>
+  {/* ✅ PURANE PRICE CODE KO YEH SE REPLACE KARO */}
+  <div className="mb-3">
+    {hasActiveDiscount(prod) ? (
+      <div className="flex items-center gap-2">
+        <p className="text-3xl font-bold text-red-600">
+          Rs. {Math.round(getDiscountedPrice(prod))}
+        </p>
+        <p className="text-lg text-slate-400 line-through">
+          Rs. {prod.price}
+        </p>
+      </div>
+    ) : (
+      <p className="text-3xl font-bold text-slate-900">
+        Rs. {prod.price}
+      </p>
+    )}
+  </div>
 
-                    <p className="text-sm text-slate-600 mb-4 line-clamp-2 leading-relaxed">
-                      {prod.description}
-                    </p>
+  {/* ✅ YEH PURA SECTION ADD KARO (description se PEHLE) */}
+  {hasActiveDiscount(prod) && prod.discount.code && (
+    <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+      <p className="text-xs font-medium text-red-700">
+        Use code: <span className="font-bold">{prod.discount.code}</span>
+      </p>
+      <p className="text-xs text-red-600 mt-1">
+        Expires: {new Date(prod.discount.expiresAt).toLocaleDateString()}
+      </p>
+    </div>
+  )}
+
+  <p className="text-sm text-slate-600 mb-4 line-clamp-2 leading-relaxed">
+    {prod.description}
+  </p>
 
                     {/* Color Selection Buttons */}
                     {prod.colors && prod.colors.length > 0 && (
@@ -656,13 +749,13 @@ const AllProducts = () => {
                     <div className="flex gap-2 pt-4 border-t border-slate-200">
                       <button
                         onClick={() => handleEdit(prod)}
-                        className="flex-1 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-lg font-medium text-sm shadow-sm hover:shadow transition-all"
+                        className="flex-1 cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-lg font-medium text-sm shadow-sm hover:shadow transition-all"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(prod._id)}
-                        className="flex-1 bg-white hover:bg-red-50 text-slate-700 hover:text-red-600 border border-slate-200 hover:border-red-200 px-4 py-2.5 rounded-lg font-medium text-sm transition-all"
+                        className="flex-1 cursor-pointer bg-white hover:bg-red-50 text-slate-700 hover:text-red-600 border border-slate-200 hover:border-red-200 px-4 py-2.5 rounded-lg font-medium text-sm transition-all"
                       >
                         Delete
                       </button>
@@ -685,7 +778,7 @@ const AllProducts = () => {
               </h2>
               <button
                 onClick={closeModal}
-                className="text-slate-400 hover:text-slate-600 text-2xl font-bold transition-colors"
+                className="text-slate-400 cursor-pointer hover:text-slate-600 text-2xl font-bold transition-colors"
               >
                 ×
               </button>
@@ -789,6 +882,67 @@ const AllProducts = () => {
                       rows="3"
                       className="border border-slate-300 bg-white text-slate-900 placeholder-slate-400 rounded-lg px-4 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent resize-none transition-all"
                     />
+                  </div>
+                </div>
+                <div className="border-t border-slate-200 pt-6">
+                  <label className="block text-sm font-semibold text-slate-900 mb-3">
+                    Discount Settings{" "}
+                    <span className="text-slate-400 text-xs font-normal">
+                      (Optional)
+                    </span>
+                  </label>
+                  <div className="space-y-3 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                        Discount Code
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g., SAVE20"
+                        value={product.discount.code}
+                        onChange={(e) =>
+                          handleDiscountChange("code", e.target.value.toUpperCase())
+                        }
+                        className="border border-slate-300 bg-white text-slate-900 placeholder-slate-400 rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                          Discount %
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="20"
+                          min="1"
+                          max="100"
+                          value={product.discount.percent}
+                          onChange={(e) =>
+                            handleDiscountChange("percent", e.target.value)
+                          }
+                          className="border border-slate-300 bg-white text-slate-900 placeholder-slate-400 rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-slate-700 mb-1.5">
+                          Expires At
+                        </label>
+                        <input
+                          type="datetime-local"
+                          value={product.discount.expiresAt}
+                          onChange={(e) =>
+                            handleDiscountChange("expiresAt", e.target.value)
+                          }
+                          className="border border-slate-300 bg-white text-slate-900 rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                        />
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-500 mt-2">
+                      💡 Discount will automatically expire after the set date
+                    </p>
                   </div>
                 </div>
 
@@ -998,13 +1152,13 @@ const AllProducts = () => {
             <div className="border-t border-slate-200 px-6 py-4 bg-slate-50 flex gap-3">
               <button
                 onClick={closeModal}
-                className="flex-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 py-3 rounded-lg font-semibold transition-all"
+                className="flex-1 cursor-pointer bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 py-3 rounded-lg font-semibold transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className="flex-1 bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all"
+                className="flex-1 cursor-pointer bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all"
               >
                 {editingProduct ? "Update Product" : "Create Product"}
               </button>

@@ -84,6 +84,17 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getDiscountProducts = async () => {
+  try {
+    const res = await fetch(`${backendUrl}/productsmodel/discount/active`);
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Error fetching discount products:", err);
+    return { success: false, message: err.message };
+  }
+};
+
   const deleteProduct = async (id) => {
     try {
       const res = await fetch(`${backendUrl}/productsmodel/${id}`, {
@@ -511,6 +522,7 @@ const deleteBlogCategory = async (id) => {
         getProductById,
         createProduct,
         updateProduct,
+        getDiscountProducts,
         deleteProduct,
         getcategory,
         createcategory,
