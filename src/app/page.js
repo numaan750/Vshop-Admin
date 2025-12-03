@@ -4,7 +4,7 @@ import AllProducts from "@/components/Products/AllProducts";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import Shipping from "@/components/shippingdetail/Shipping";
+// import Shipping from "@/components/shippingdetail/Shipping";
 import Checkout from "@/components/checkouts/Checkout";
 import Deshboard from "@/components/deshboard/Dashboard";
 import Websiteuser from "@/components/websiteusers/Websiteuser";
@@ -20,7 +20,7 @@ export default function ModernDashboardLayout() {
     { name: "Dashboard", path: "/dashboard" },
     { name: "Products", path: "/products" },
     { name: "Categories", path: "/categories" },
-    { name: "Shipping", path: "/shipping" },
+    // { name: "Shipping", path: "/shipping" },
     { name: "Orders", path: "/orders" },
     { name: "Websiteuser", path: "/Websiteuser" },
     { name: "blogs", path: "/blogs" },
@@ -150,11 +150,11 @@ export default function ModernDashboardLayout() {
             </>
           )}
 
-          {activeView === "Shipping" && (
+          {/* {activeView === "Shipping" && (
             <>
              <Shipping />
             </>
-          )}
+          )} */}
 
           {activeView === "Orders" && (
            <>
