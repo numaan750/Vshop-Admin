@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Trash2, Mail, User, Clock, Search} from "lucide-react";
+import { Trash2, Mail, User, Clock, Search } from "lucide-react";
 import { AppContext } from "@/context/Appcontext";
 
 const AdminContactPanel = () => {
-const { getcontect, deletecontect, markContactAsRead } = useContext(AppContext);  const [contacts, setContacts] = useState([]);
+  const { getcontect, deletecontect, markContactAsRead } =
+    useContext(AppContext);
+  const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -47,20 +49,22 @@ const { getcontect, deletecontect, markContactAsRead } = useContext(AppContext);
   };
 
   const markAsRead = async (id) => {
-  try {
-    // ⭐ Backend call
-    const response = await markContactAsRead(id);
-    
-    if (response.success) {
-      // ⭐ Frontend state update (backend success hone ke baad)
-      setContacts(contacts.map((c) => (c._id === id ? { ...c, read: true } : c)));
-    } else {
-      console.error("Failed to mark as read:", response.message);
+    try {
+      // ⭐ Backend call
+      const response = await markContactAsRead(id);
+
+      if (response.success) {
+        // ⭐ Frontend state update (backend success hone ke baad)
+        setContacts(
+          contacts.map((c) => (c._id === id ? { ...c, read: true } : c))
+        );
+      } else {
+        console.error("Failed to mark as read:", response.message);
+      }
+    } catch (error) {
+      console.error("Error marking as read:", error);
     }
-  } catch (error) {
-    console.error("Error marking as read:", error);
-  }
-};
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

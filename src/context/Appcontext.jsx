@@ -85,15 +85,15 @@ const AppProvider = ({ children }) => {
   };
 
   const getDiscountProducts = async () => {
-  try {
-    const res = await fetch(`${backendUrl}/productsmodel/discount/active`);
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error fetching discount products:", err);
-    return { success: false, message: err.message };
-  }
-};
+    try {
+      const res = await fetch(`${backendUrl}/productsmodel/discount/active`);
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching discount products:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
   const deleteProduct = async (id) => {
     try {
@@ -296,9 +296,8 @@ const AppProvider = ({ children }) => {
     }
   };
 
-
-  //dashboard k liya hyn ya 
- const getUsersCount = async () => {
+  //dashboard k liya hyn ya
+  const getUsersCount = async () => {
     try {
       const res = await fetch(`${backendUrl}/users/count`);
       const data = await res.json();
@@ -322,7 +321,7 @@ const AppProvider = ({ children }) => {
 
   const getOrdersCount = async () => {
     try {
-      const res = await fetch(`${backendUrl}/orders/count`);  // ✅ CHANGED
+      const res = await fetch(`${backendUrl}/orders/count`); // ✅ CHANGED
       const data = await res.json();
       return data;
     } catch (err) {
@@ -332,258 +331,253 @@ const AppProvider = ({ children }) => {
   };
 
   const getRecentOrders = async () => {
-  try {
-    const res = await fetch(`${backendUrl}/recent`); // ✅ Fixed template literal
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+    try {
+      const res = await fetch(`${backendUrl}/recent`); // ✅ Fixed template literal
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching recent orders:", err);
+      return { success: false, message: err.message };
     }
-    
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error fetching recent orders:", err);
-    return { success: false, message: err.message };
-  }
-};
+  };
 
-const getAllOrders = async () => {
-  try {
-    const res = await fetch(`${backendUrl}/orders`); // ✅ Fixed template literal
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+  const getAllOrders = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/orders`); // ✅ Fixed template literal
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching all orders:", err);
+      return { success: false, message: err.message };
     }
-    
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error fetching all orders:", err);
-    return { success: false, message: err.message };
-  }
-};
+  };
 
+  const getblogs = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/blogmodel`);
+      // ✅ Fixed template literal
 
-const getblogs = async () =>{
-  try {
-    const res = await fetch(`${backendUrl}/blogmodel`);
- // ✅ Fixed template literal
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching all orders:", err);
+      return { success: false, message: err.message };
     }
-    
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error fetching all orders:", err);
-    return { success: false, message: err.message };
-  }
-};
+  };
 
-const getblogbyId = async (id) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogmodel/${id}`);
+  const getblogbyId = async (id) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogmodel/${id}`);
 
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error fetching order:", err);
-    return { success: false, message: err.message };
-  }
-};
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching order:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-const createblog = async (blog) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogmodel`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(blog),
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error creating order:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const createblog = async (blog) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogmodel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(blog),
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error creating order:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-const updateblog = async (id, blog) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogmodel/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(blog),
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error updating order:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const updateblog = async (id, blog) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogmodel/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(blog),
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error updating order:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-const deleteblog = async (id) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogmodel/${id}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error deleting order:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const deleteblog = async (id) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogmodel/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error deleting order:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
+  const getblogcategory = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/blogcategorymodel`);
+      const data = await res.json();
 
-const getblogcategory = async () => {
-  try {
-    const res = await fetch(`${backendUrl}/blogcategorymodel`);
-    const data = await res.json();
-    
-    // ✅ Directly return jo backend se aya
-    return data;
-  } catch (err) {
-    console.error("Error fetching categories:", err);
-    return { success: false, message: err.message };
-  }
-};
+      // ✅ Directly return jo backend se aya
+      return data;
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-const getblogcategorybyId = async (id) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogcategorymodel/${id}`);
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error fetching category:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const getblogcategorybyId = async (id) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogcategorymodel/${id}`);
+      const data = await res.json();
 
-const createBlogCategory = async (category) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogcategorymodel`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(category),
-    });
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error creating category:", err);
-    return { success: false, message: err.message };
-  }
-};
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error fetching category:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-const updateBlogCategory = async (id, category) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogcategorymodel/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(category),
-    });
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error updating category:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const createBlogCategory = async (category) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogcategorymodel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
+      });
+      const data = await res.json();
 
-const deleteBlogCategory = async (id) => {
-  try {
-    const res = await fetch(`${backendUrl}/blogcategorymodel/${id}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error deleting category:", err);
-    return { success: false, message: err.message };
-  }
-};
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error creating category:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
- const getcontect = async () =>{
-  try {
-    const res = await fetch(`http://localhost:4000/api/contectmodel`);
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error fetching category:", err);
-    return { success: false, message: err.message };
-  }
-}
+  const updateBlogCategory = async (id, category) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogcategorymodel/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
+      });
+      const data = await res.json();
 
-const createcontect = async (contect) => {
-  try {
-    const res = await fetch(`http://localhost:4000/api/contectmodel`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contect),
-    });
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error creating category:", err);
-    return { success: false, message: err.message };
-  }
-};
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error updating category:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
+  const deleteBlogCategory = async (id) => {
+    try {
+      const res = await fetch(`${backendUrl}/blogcategorymodel/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
 
-const updatecontect =  async (id, contect) => {
-  try {
-    const res = await fetch(`http://localhost:4000/api/contectmodel/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(contect),
-    });
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error updating category:", err);
-    return { success: false, message: err.message };
-  }
-};
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error deleting category:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-const deletecontect = async (id) => {
-  try {
-    const res = await fetch(`http://localhost:4000/api/contectmodel/${id}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
-    
-    return data; // ✅ Direct return
-  } catch (err) {
-    console.error("Error deleting category:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const getcontect = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/contectmodel`);
+      const data = await res.json();
 
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error fetching category:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
-// deletecontect ke TURANT BAAD ye function add karo
-const markContactAsRead = async (id) => {
-  try {
-    const res = await fetch(`http://localhost:4000/api/contectmodel/${id}/read`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-    
-    return data;
-  } catch (err) {
-    console.error("Error marking as read:", err);
-    return { success: false, message: err.message };
-  }
-};
+  const createcontect = async (contect) => {
+    try {
+      const res = await fetch(`${backendUrl}/contectmodel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contect),
+      });
+      const data = await res.json();
 
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error creating category:", err);
+      return { success: false, message: err.message };
+    }
+  };
+
+  const updatecontect = async (id, contect) => {
+    try {
+      const res = await fetch(`${backendUrl}/contectmodel/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contect),
+      });
+      const data = await res.json();
+
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error updating category:", err);
+      return { success: false, message: err.message };
+    }
+  };
+
+  const deletecontect = async (id) => {
+    try {
+      const res = await fetch(`${backendUrl}/contectmodel/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      return data; // ✅ Direct return
+    } catch (err) {
+      console.error("Error deleting category:", err);
+      return { success: false, message: err.message };
+    }
+  };
+
+  // deletecontect ke TURANT BAAD ye function add karo
+  const markContactAsRead = async (id) => {
+    try {
+      const res = await fetch(`${backendUrl}/contectmodel/${id}/read`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+
+      return data;
+    } catch (err) {
+      console.error("Error marking as read:", err);
+      return { success: false, message: err.message };
+    }
+  };
 
   return (
     <AppContext.Provider
@@ -616,13 +610,13 @@ const markContactAsRead = async (id) => {
         updatestatus,
         deletecheckout,
         getcheckoutpagination,
-        //dashboard k liya 
+        //dashboard k liya
         getOrdersCount,
         getProductsCount,
         getUsersCount,
         getRecentOrders,
         getAllOrders,
-        //blogs 
+        //blogs
         getblogs,
         getblogbyId,
         createblog,
@@ -634,13 +628,12 @@ const markContactAsRead = async (id) => {
         createBlogCategory,
         updateBlogCategory,
         deleteBlogCategory,
-        //contect k liya 
-        getcontect, 
-        createcontect, 
-        updatecontect, 
+        //contect k liya
+        getcontect,
+        createcontect,
+        updatecontect,
         deletecontect,
         markContactAsRead,
-
       }}
     >
       {children}
