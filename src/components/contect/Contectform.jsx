@@ -125,7 +125,7 @@ const AdminContactPanel = () => {
             </div>
             <button
               onClick={fetchContacts}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               Refresh
             </button>
@@ -146,7 +146,7 @@ const AdminContactPanel = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => setFilterStatus("all")}
-                className={`px-4 py-2 rounded-lg transition ${
+                className={`px-4 cursor-pointer py-2 rounded-lg transition ${
                   filterStatus === "all"
                     ? "bg-blue-600 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -156,7 +156,7 @@ const AdminContactPanel = () => {
               </button>
               <button
                 onClick={() => setFilterStatus("unread")}
-                className={`px-4 py-2 rounded-lg transition ${
+                className={`px-4  cursor-pointer py-2 rounded-lg transition ${
                   filterStatus === "unread"
                     ? "bg-blue-600 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -166,7 +166,7 @@ const AdminContactPanel = () => {
               </button>
               <button
                 onClick={() => setFilterStatus("read")}
-                className={`px-4 py-2 rounded-lg transition ${
+                className={`px-4 cursor-pointer py-2 rounded-lg transition ${
                   filterStatus === "read"
                     ? "bg-blue-600 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -241,7 +241,7 @@ const AdminContactPanel = () => {
                     }}
                     className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-5 h-5 cursor-pointer" />
                   </button>
                 </div>
               </div>
@@ -273,7 +273,7 @@ const AdminContactPanel = () => {
                 </div>
                 <button
                   onClick={() => setSelectedContact(null)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                  className="text-gray-500 cursor-pointer hover:text-gray-700 text-2xl"
                 >
                   ×
                 </button>
@@ -307,7 +307,7 @@ const AdminContactPanel = () => {
                     handleDelete(selectedContact._id);
                     setSelectedContact(null);
                   }}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                  className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
                 >
                   Delete
                 </button>
