@@ -508,6 +508,82 @@ const deleteBlogCategory = async (id) => {
   }
 };
 
+ const getcontect = async () =>{
+  try {
+    const res = await fetch(`http://localhost:4000/api/contectmodel`);
+    const data = await res.json();
+    
+    return data; // ✅ Direct return
+  } catch (err) {
+    console.error("Error fetching category:", err);
+    return { success: false, message: err.message };
+  }
+}
+
+const createcontect = async (contect) => {
+  try {
+    const res = await fetch(`http://localhost:4000/api/contectmodel`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(contect),
+    });
+    const data = await res.json();
+    
+    return data; // ✅ Direct return
+  } catch (err) {
+    console.error("Error creating category:", err);
+    return { success: false, message: err.message };
+  }
+};
+
+
+const updatecontect =  async (id, contect) => {
+  try {
+    const res = await fetch(`http://localhost:4000/api/contectmodel/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(contect),
+    });
+    const data = await res.json();
+    
+    return data; // ✅ Direct return
+  } catch (err) {
+    console.error("Error updating category:", err);
+    return { success: false, message: err.message };
+  }
+};
+
+const deletecontect = async (id) => {
+  try {
+    const res = await fetch(`http://localhost:4000/api/contectmodel/${id}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    
+    return data; // ✅ Direct return
+  } catch (err) {
+    console.error("Error deleting category:", err);
+    return { success: false, message: err.message };
+  }
+};
+
+
+// deletecontect ke TURANT BAAD ye function add karo
+const markContactAsRead = async (id) => {
+  try {
+    const res = await fetch(`http://localhost:4000/api/contectmodel/${id}/read`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await res.json();
+    
+    return data;
+  } catch (err) {
+    console.error("Error marking as read:", err);
+    return { success: false, message: err.message };
+  }
+};
+
 
   return (
     <AppContext.Provider
@@ -557,7 +633,14 @@ const deleteBlogCategory = async (id) => {
         getblogcategorybyId,
         createBlogCategory,
         updateBlogCategory,
-        deleteBlogCategory
+        deleteBlogCategory,
+        //contect k liya 
+        getcontect, 
+        createcontect, 
+        updatecontect, 
+        deletecontect,
+        markContactAsRead,
+
       }}
     >
       {children}
