@@ -10,7 +10,7 @@ import Deshboard from "@/components/deshboard/Dashboard";
 import Websiteuser from "@/components/websiteusers/Websiteuser";
 import BlogAdminPanel from "@/components/blog/Blogs";
 import BlogCategoryAdmin from "@/components/blogcategiries/BlogCategory";
-import Contectform from "@/components/contect/contectform";
+import Contectform from"@/components/contect/Contectform";
 
 export default function ModernDashboardLayout() {
   const [activeView, setActiveView] = useState("Dashboard");
