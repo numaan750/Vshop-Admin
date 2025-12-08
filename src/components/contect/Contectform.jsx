@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Trash2, Mail, User, Clock, Search } from "lucide-react";
+import {
+  Trash2,
+  Mail,
+  User,
+  Clock,
+  Search,
+  Eye,
+  CheckCheck,
+} from "lucide-react";
 import { AppContext } from "@/context/Appcontext";
+import { toast, Toaster } from "react-hot-toast";
 
 const AdminContactPanel = () => {
   const { getcontect, deletecontect, markContactAsRead } =
@@ -41,8 +50,13 @@ const AdminContactPanel = () => {
         if (response.success) {
           setContacts(contacts.filter((c) => c._id !== id));
           setSelectedContact(null);
+          toast.success("Message deleted successfully", {
+            duration: 3000,
+            icon: "🗑️",
+          });
         }
       } catch (error) {
+        toast.error("Failed to delete message");
         console.error("Error deleting contact:", error);
       }
     }
@@ -50,18 +64,21 @@ const AdminContactPanel = () => {
 
   const markAsRead = async (id) => {
     try {
-      // ⭐ Backend call
       const response = await markContactAsRead(id);
-
       if (response.success) {
-        // ⭐ Frontend state update (backend success hone ke baad)
         setContacts(
           contacts.map((c) => (c._id === id ? { ...c, read: true } : c))
         );
+        toast.success("Message marked as read ✓", {
+          duration: 2000,
+          position: "top-right",
+        });
       } else {
+        toast.error("Failed to mark as read");
         console.error("Failed to mark as read:", response.message);
       }
     } catch (error) {
+      toast.error("Error marking message as read");
       console.error("Error marking as read:", error);
     }
   };
@@ -111,6 +128,7 @@ const AdminContactPanel = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -189,13 +207,9 @@ const AdminContactPanel = () => {
             filteredContacts.map((contact) => (
               <div
                 key={contact._id}
-                className={`bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition cursor-pointer ${
+                className={`bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition ${
                   !contact.read ? "border-l-4 border-blue-600" : ""
                 }`}
-                onClick={() => {
-                  setSelectedContact(contact);
-                  if (!contact.read) markAsRead(contact._id);
-                }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -234,15 +248,46 @@ const AdminContactPanel = () => {
                       {contact.message}
                     </p>
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(contact._id);
-                    }}
-                    className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                  >
-                    <Trash2 className="w-5 h-5 cursor-pointer" />
-                  </button>
+                  <div className="flex items-center gap-2 ml-4">
+                    {/* Eye Button - View Detail */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedContact(contact);
+                        if (!contact.read) markAsRead(contact._id);
+                      }}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                      title="View Details"
+                    >
+                      <Eye className="w-5 h-5 cursor-pointer" />
+                    </button>
+
+                    {/* Mark as Read Button */}
+                    {!contact.read && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          markAsRead(contact._id);
+                        }}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                        title="Mark as Read"
+                      >
+                        <CheckCheck className="w-5 h-5 cursor-pointer" />
+                      </button>
+                    )}
+
+                    {/* Delete Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(contact._id);
+                      }}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-5 h-5 cursor-pointer" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
@@ -252,7 +297,7 @@ const AdminContactPanel = () => {
         {/* Detail Modal */}
         {selectedContact && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center p-4 z-50"
             onClick={() => setSelectedContact(null)}
           >
             <div
